@@ -1,20 +1,27 @@
-# Ultroid - UserBot
-# Copyright (C) 2021-2022 TeamUltroid
-# This file is a part of < https://github.com/TeamUltroid/Ultroid/ >
-# PLease read the GNU Affero General Public License in <https://www.github.com/TeamUltroid/Ultroid/blob/main/LICENSE/>.
+# Start with a Python 3 base image
+FROM python:3.9-slim-buster
 
-FROM theteamultroid/ultroid:main
+# Set a working directory
+WORKDIR /app
 
-# set timezone
-ENV TZ=Asia/Kolkata
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+# Install git
+RUN apt-get update && apt-get install -y git
 
-COPY installer.sh .
+# Copy the current directory contents into the container at /app
+COPY . /app
 
-RUN bash installer.sh
+# Install the Python dependencies
+RUN pip3 install --no-cache-dir -r requirements.txt
 
-# changing workdir
-WORKDIR "/root/TeamUltroid"
+# Install additional requirements
+RUN pip3 install --no-cache-dir -r re*/st*/op*.txt
 
-# start the bot.
-CMD ["bash", "startup"]
+# Copy your .env file from your local machine to your Docker image.
+# Note: Make sure your .env file is in the same directory as your Dockerfile
+COPY .env /app/.env
+
+# Expose the necessary port
+EXPOSE 80
+
+# Set the command to run your bot
+CMD ["python3", "-m", "pyUltroid"]
